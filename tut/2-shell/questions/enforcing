@@ -1,0 +1,5 @@
+The inner() method of the Readable and Writeable traits return a *const T
+and a *mut T, respectively; *const T pointers are technically immutable,
+but can be cast to *mut T pointers which are mutable. Rather,
+readability/writability is enforced by only exposing methods corresponding
+to the allowed operation (write() for Writeable and read() for Readable).

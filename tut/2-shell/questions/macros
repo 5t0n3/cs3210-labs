@@ -1,0 +1,4 @@
+The readable!, writeable!, and readable_writeable! macros implement the
+traits of the corresponding names for the provided type. The second
+argument to each macro is transformed into the inner() function for
+each trait.

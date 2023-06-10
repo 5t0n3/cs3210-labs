@@ -1,0 +1,5 @@
+The lifetime bound is required on the StackVec struct because its backing
+memory has to live for at least as long as the struct itself. If this
+wasn't enforced by Rust, the backing memory may be freed before the
+StackVec itself, leading to potential issues if the memory is in use by
+something else, for example.

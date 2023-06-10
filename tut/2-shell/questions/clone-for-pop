@@ -1,0 +1,5 @@
+The Clone bound for the pop method is required because we cannot move
+elements of the slice out from behind a mutable reference as is stored
+in a StackVec struct. If this bound wasn't included/enforced by the
+compiler, moving out of the backing slice could cause issues if it is
+used for more purposes than just a StackVec.

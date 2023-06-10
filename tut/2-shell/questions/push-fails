@@ -1,0 +1,6 @@
+std::Vec::push() is generally infallible since the backing memory can
+be reallocated on the heap. For our implementation of StackVec, on the
+other hand, its backing memory is a slice of constant size, so it cannot
+be expanded beyond the length of that slice. This means that elements can
+only be pushed to a StackVec when it is not full; we indicate failures
+to push elements by returning an Err.

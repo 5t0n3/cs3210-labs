@@ -1,0 +1,3 @@
+According to the documentation, Unique<Volatile<T>> is Sync if the
+underlying type T is Sync, whereas Volatile<T> is never Sync regardless
+of if T is.

@@ -1,0 +1,3 @@
+The parsing functions used by structopt that can fail all return Results,
+so an Err variant returned from one of those parsing functions lets
+structopt know that an invalid value was provided.
