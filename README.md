@@ -1,9 +1,13 @@
 # CS3210 Lab assignments
 
+I'm not actually taking this course at Georgia Tech but figured I'd check it out since it sounds interesting and I am a fan of rust :)
+
+## Original REAME
+
 This repository contains lab assignments for Georgia Tech CS3210 "Design of Operating Systems".
 The latest course material is available [here](https://tc.gts3.org/cs3210/2020/spring/index.html).
 
-## Who should take CS3210?
+### Who should take CS3210?
 
 - Anyone wants to work on challenges in operating systems
 - Anyone cares about what's going on under the hood
@@ -11,7 +15,7 @@ The latest course material is available [here](https://tc.gts3.org/cs3210/2020/s
 - Anyone wants to build embedded/IoT firmware (e.g., Robot)
 - Anyone needs to diagnose bugs or security problems
 
-## Why Rust?
+### Why Rust?
 
 Historically, C has been mainly used for OS development because of its portability,
 minimal runtime, direct hardware/memory access, and (decent) usability.
@@ -19,7 +23,7 @@ Rust provides all of these features with addition of memory safety guarantee,
 strong type system, and modern language abstractions
 which help programmers to make less mistakes when writing code.
 
-## Acknowledgement
+### Acknowledgement
 
 We built our labs based on the materials originally developed for
 [CS140e: An Experimental Course on Operating Systems](https://cs140e.sergio.bz/)
