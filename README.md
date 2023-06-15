@@ -2,7 +2,7 @@
 
 I'm not actually taking this course at Georgia Tech but figured I'd check it out since it sounds interesting and I am a fan of rust :)
 
-## Original REAME
+## Original README
 
 This repository contains lab assignments for Georgia Tech CS3210 "Design of Operating Systems".
 The latest course material is available [here](https://tc.gts3.org/cs3210/2020/spring/index.html).
