@@ -1,6 +1,6 @@
 ROOT := $(shell git rev-parse --show-toplevel)
 
-export PATH := /usr/lib/llvm-8/bin:$(PATH)
+export PATH := $(LLVM_LD_PATH):$(LLVM_TOOLS_PATH):$(PATH)
 
 CC := clang
 AS := clang

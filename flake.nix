@@ -78,22 +78,31 @@
         cargoVendorDir = craneLib.vendorCargoDeps {cargoLock = "${libPath}/ttywrite/Cargo.lock";};
       };
 
-    inherit (pkgs) pwndbg qemu socat;
+    inherit (pkgs) pwndbg clang clang-tools cargo-binutils qemu socat;
   in {
     # TODO: figure out what else to install
     devShells.${system}.default = pkgs.mkShell {
+      LLVM_TOOLS_PATH = "${rust-nightly}/lib/rustlib/x86_64-unknown-linux-gnu/bin";
+      LLVM_LD_PATH = "${rust-nightly}/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld";
+      HOST_TARGET = "x86_64-unknown-linux-gnu";
+
       packages = [
         # general stuff
         rust-nightly
         pwndbg
         qemu
+        cargo-binutils
 
         # lab0
         rustlings
 
+        # lab1
+        clang
+        clang-tools
+
         # lab2
         socat
-        ttywrite
+        # ttywrite
       ];
     };
 

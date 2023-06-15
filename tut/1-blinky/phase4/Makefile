@@ -1,43 +1,33 @@
 ROOT := $(shell git rev-parse --show-toplevel)
 
 KERN := blinky
-KERN_DEBUG := target/aarch64-unknown-none/debug/${KERN}
-KERN_RELEASE := target/aarch64-unknown-none/release/${KERN}
 
-OBJCPY := cargo objcopy -- --strip-all -O binary
+# these have to be provided as flags since otherwise `cargo test` breaks
+# (I believe this issue is related: https://github.com/rust-lang/cargo/issues/7359)
+BUILD_STD_FLAGS = -Z build-std=core,compiler_builtins,alloc -Z build-std-features=compiler-builtins-mem
 
-.PHONY: all debug release qemu objdump nm check clean install test
+.PHONY: all debug release qemu objdump clean install test
 
 all: release
 
-# e.g., xbuild bin opt
-define xbuild
-	@echo "+ Building build/$(KERN).elf [xbuild/$@]"
-	@cargo xbuild $(2)
-	@mkdir -p build
-	@cp -f $(1) build/$(KERN).elf
-
-	@echo "+ Building build/$(KERN).bin [objcopy]"
-	@$(OBJCPY) $(1) build/$(KERN).bin
-endef
-
+# builds have to be done separately since cargo-objcopy just ignores the flags for some reason :(
 debug:
-	$(call xbuild,$(KERN_DEBUG))
+	@mkdir -p build
+	@echo "+ Building build/$(KERN).elf [build/debug]"
+	@cargo build $(BUILD_STD_FLAGS)
+	@cargo objcopy -- --strip-all -O binary build/$(KERN).elf
 
 release:
-	$(call xbuild,$(KERN_RELEASE),--release)
-
-check:
-	@cargo xcheck
+	@mkdir -p build
+	@echo "+ Building build/$(KERN).elf [build/release]"
+	@cargo build --release $(BUILD_STD_FLAGS)
+	@cargo objcopy --release -- --strip-all -O binary build/$(KERN).elf
 
 qemu:
 	./qemu.sh build/$(KERN).elf -d in_asm
 
 objdump:
-	cargo objdump -- -disassemble -no-show-raw-insn -print-imm-hex build/$(KERN).elf
-
-nm:
-	cargo nm build/$(KERN).elf
+	cargo objdump -- --disassemble --no-show-raw-insn --print-imm-hex
 
 clean:
 	cargo clean
@@ -48,4 +38,4 @@ install:
 	@$(ROOT)/bin/install-kernel.py build/$(KERN).elf
 
 test:
-	cargo test --target=$(shell $(ROOT)/bin/get-host-target.sh)
+	cargo test --target=$(HOST_TARGET)
