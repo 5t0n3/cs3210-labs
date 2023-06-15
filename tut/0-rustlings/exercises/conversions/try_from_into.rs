@@ -1,8 +1,10 @@
+#![feature(let_chains)]
+
 // TryFrom is a simple and safe type conversion that may fail in a controlled way under some circumstances.
 // Basically, this is the same as From. The main difference is that this should return a Result type
 // instead of the target type itself.
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.TryFrom.html
-use std::convert::{TryInto, TryFrom};
+use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug)]
 struct Person {
@@ -10,7 +12,6 @@ struct Person {
     age: usize,
 }
 
-// I AM NOT DONE
 // Your task is to complete this implementation
 // in order for the line `let p = Person::try_from("Mark,20")` to compile
 // and return an Ok result of inner type Person.
@@ -28,6 +29,15 @@ struct Person {
 impl TryFrom<&str> for Person {
     type Error = String;
     fn try_from(s: &str) -> Result<Self, Self::Error> {
+        let components: Vec<&str> = s.split(',').collect();
+        if let Some(name) = components.get(0) && let Some(raw_age) = components.get(1) && let Ok(age) = raw_age.parse::<usize>() {
+            Ok(Person {
+                name: name.to_string(),
+                age
+            })
+        } else {
+            Err("Error when initializing Person".into())
+        }
     }
 }
 

@@ -15,19 +15,19 @@
 //
 // Execute `rustlings hint errorsn` for hints :)
 
-// I AM NOT DONE
-
 use std::error;
 use std::fmt;
 use std::io;
 
 // PositiveNonzeroInteger is a struct defined below the tests.
-fn read_and_validate(b: &mut dyn io::BufRead) -> Result<PositiveNonzeroInteger, ???> {
+fn read_and_validate(
+    b: &mut dyn io::BufRead,
+) -> Result<PositiveNonzeroInteger, Box<dyn error::Error>> {
     let mut line = String::new();
-    b.read_line(&mut line);
-    let num: i64 = line.trim().parse();
-    let answer = PositiveNonzeroInteger::new(num);
-    answer
+    b.read_line(&mut line)?;
+    let num: i64 = line.trim().parse()?;
+    let answer = PositiveNonzeroInteger::new(num)?;
+    Ok(answer)
 }
 
 // This is a test helper function that turns a &str into a BufReader.
@@ -100,7 +100,7 @@ enum CreationError {
 
 impl fmt::Display for CreationError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str((self as &dyn error::Error).description())
+        write!(f, "{}", self)
     }
 }
 

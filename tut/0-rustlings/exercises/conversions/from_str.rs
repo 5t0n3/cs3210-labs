@@ -1,3 +1,5 @@
+#![feature(let_chains)]
+
 // This does practically the same thing that TryFrom<&str> does.
 // Additionally, upon implementing FromStr, you can use the `parse` method
 // on strings to generate an object of the implementor type.
@@ -10,7 +12,6 @@ struct Person {
     age: usize,
 }
 
-// I AM NOT DONE
 // Steps:
 // 1. Split the given string on the commas present in it
 // 2. Extract the first element from the split operation and use it as the name
@@ -21,6 +22,16 @@ struct Person {
 impl FromStr for Person {
     type Err = String;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        let components: Vec<_> = s.split(',').collect();
+
+        if let Some(name) = components.get(0) && let Some(age_str) = components.get(1) && let Ok(age) = age_str.parse() {
+            Ok(Person {
+                name: name.to_string(),
+                age
+            })
+        } else {
+            Err("Error when converting str to Person".into())
+        }
     }
 }
 
