@@ -11,17 +11,21 @@ CARGO_FLAGS = -Z build-std=core,compiler_builtins,alloc -Z build-std-features=co
 all: release
 
 # builds have to be done separately since cargo-objcopy just ignores the flags for some reason :(
+# UPDATE: this is fixed as of commit 32df067c, but it's not part of a release yet :(
+# (see https://github.com/rust-embedded/cargo-binutils/commit/32df067ce6a18872618c686c0760ff267870eb2c)
 debug:
 	@mkdir -p build
-	@echo "+ Building build/$(KERN).elf [build/debug]"
-	@cargo build $(CARGO_FLAGS)
-	@cargo objcopy -- --strip-all -O binary build/$(KERN).elf
+	@echo "+ Building build/$(KERN).bin [build/debug]"
+	@cargo objcopy -- --strip-all -O elf64-aarch64 build/$(KERN).elf
+	@echo "+ Making kernel image (build/$(KERN).bin)"
+	@cargo objcopy -- --strip-all -O binary build/$(KERN).bin
 
 release:
 	@mkdir -p build
 	@echo "+ Building build/$(KERN).elf [build/release]"
-	@cargo build --release $(CARGO_FLAGS)
-	@cargo objcopy --release -- --strip-all -O binary build/$(KERN).elf
+	@cargo objcopy $(CARGO_FLAGS) --release -- --strip-all -O elf64-aarch64 build/$(KERN).elf
+	@echo "+ Making kernel image (build/$(KERN).bin)"
+	@cargo objcopy $(CARGO_FLAGS) --release -- --strip-all -O binary build/$(KERN).bin
 
 qemu:
 	./qemu.sh build/$(KERN).elf -d in_asm
@@ -34,8 +38,8 @@ clean:
 	rm -rf build
 
 install:
-	@echo "+ Installing build/$(KERN).elf [install-kernel.py]"
-	@$(ROOT)/bin/install-kernel.py build/$(KERN).elf
+	@echo "+ Installing build/$(KERN).bin [install-kernel.py]"
+	@$(ROOT)/bin/install-kernel.py build/$(KERN).bin
 
 test:
 	cargo test --target=$(HOST_TARGET)
