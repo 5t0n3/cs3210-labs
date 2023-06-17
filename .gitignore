@@ -2,3 +2,7 @@ target/
 build/
 TAGS
 .dep
+
+# nix stuff
+.envrc
+.direnv/

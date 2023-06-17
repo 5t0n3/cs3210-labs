@@ -10,6 +10,10 @@
     # don't use as a flake since they don't expose the rustlings package by itself :(
     flake = false;
   };
+  inputs.cargo-binutils-git = {
+    url = "github:rust-embedded/cargo-binutils";
+    flake = false;
+  };
 
   outputs = {
     self,
@@ -17,6 +21,7 @@
     crane,
     rust-overlay,
     rustlings-git,
+    cargo-binutils-git,
   }: let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
@@ -58,6 +63,14 @@
       doCheck = false;
     };
 
+    cargo-binutils = craneLib.buildPackage {
+      pname = "cargo-binutils";
+      version = "master";
+
+      src = craneLib.cleanCargoSource cargo-binutils-git;
+      cargoVendorDir = craneLib.vendorCargoDeps {cargoLock = ./nix/binutils-Cargo.lock;};
+    };
+
     # this is hacky because of the dependencies on shim/xmodem :')
     ttywrite = let
       inherit (nixpkgs) lib;
@@ -78,18 +91,28 @@
         cargoVendorDir = craneLib.vendorCargoDeps {cargoLock = "${libPath}/ttywrite/Cargo.lock";};
       };
 
-    inherit (pkgs) pwndbg qemu socat;
+    inherit (pkgs) pwndbg clang clang-tools qemu socat python3;
   in {
     # TODO: figure out what else to install
     devShells.${system}.default = pkgs.mkShell {
+      LLVM_TOOLS_PATH = "${rust-nightly}/lib/rustlib/x86_64-unknown-linux-gnu/bin";
+      LLVM_LD_PATH = "${rust-nightly}/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld";
+      HOST_TARGET = "x86_64-unknown-linux-gnu";
+
       packages = [
         # general stuff
         rust-nightly
         pwndbg
         qemu
+        cargo-binutils
+        python3
 
         # lab0
         rustlings
+
+        # lab1
+        clang
+        clang-tools
 
         # lab2
         socat

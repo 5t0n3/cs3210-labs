@@ -1,51 +1,45 @@
 ROOT := $(shell git rev-parse --show-toplevel)
 
 KERN := blinky
-KERN_DEBUG := target/aarch64-unknown-none/debug/${KERN}
-KERN_RELEASE := target/aarch64-unknown-none/release/${KERN}
 
-OBJCPY := cargo objcopy -- --strip-all -O binary
+# these have to be provided as flags since otherwise `cargo test` breaks
+# (I believe this issue is related: https://github.com/rust-lang/cargo/issues/7359)
+CARGO_FLAGS = -Z build-std=core,compiler_builtins,alloc -Z build-std-features=compiler-builtins-mem
 
-.PHONY: all debug release qemu objdump nm check clean install test
+.PHONY: all debug release qemu objdump clean install test
 
 all: release
 
-# e.g., xbuild bin opt
-define xbuild
-	@echo "+ Building build/$(KERN).elf [xbuild/$@]"
-	@cargo xbuild $(2)
-	@mkdir -p build
-	@cp -f $(1) build/$(KERN).elf
-
-	@echo "+ Building build/$(KERN).bin [objcopy]"
-	@$(OBJCPY) $(1) build/$(KERN).bin
-endef
-
+# builds have to be done separately since cargo-objcopy just ignores the flags for some reason :(
+# UPDATE: this is fixed as of commit 32df067c, but it's not part of a release yet :(
+# (see https://github.com/rust-embedded/cargo-binutils/commit/32df067ce6a18872618c686c0760ff267870eb2c)
 debug:
-	$(call xbuild,$(KERN_DEBUG))
+	@mkdir -p build
+	@echo "+ Building build/$(KERN).bin [build/debug]"
+	@cargo objcopy -- --strip-all -O elf64-aarch64 build/$(KERN).elf
+	@echo "+ Making kernel image (build/$(KERN).bin)"
+	@cargo objcopy -- --strip-all -O binary build/$(KERN).bin
 
 release:
-	$(call xbuild,$(KERN_RELEASE),--release)
-
-check:
-	@cargo xcheck
+	@mkdir -p build
+	@echo "+ Building build/$(KERN).elf [build/release]"
+	@cargo objcopy $(CARGO_FLAGS) --release -- --strip-all -O elf64-aarch64 build/$(KERN).elf
+	@echo "+ Making kernel image (build/$(KERN).bin)"
+	@cargo objcopy $(CARGO_FLAGS) --release -- --strip-all -O binary build/$(KERN).bin
 
 qemu:
 	./qemu.sh build/$(KERN).elf -d in_asm
 
 objdump:
-	cargo objdump -- -disassemble -no-show-raw-insn -print-imm-hex build/$(KERN).elf
-
-nm:
-	cargo nm build/$(KERN).elf
+	cargo objdump -- --disassemble --no-show-raw-insn --print-imm-hex
 
 clean:
 	cargo clean
 	rm -rf build
 
 install:
-	@echo "+ Installing build/$(KERN).elf [install-kernel.py]"
-	@$(ROOT)/bin/install-kernel.py build/$(KERN).elf
+	@echo "+ Installing build/$(KERN).bin [install-kernel.py]"
+	@$(ROOT)/bin/install-kernel.py build/$(KERN).bin
 
 test:
-	cargo test --target=$(shell $(ROOT)/bin/get-host-target.sh)
+	cargo test --target=$(HOST_TARGET)

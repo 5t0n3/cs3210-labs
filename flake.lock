@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "cargo-binutils-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1677082565,
+        "narHash": "sha256-VKOCeKs5yvxkbTbbzPAXXf1o2yLT2+rSPnjIoNEMVQc=",
+        "owner": "rust-embedded",
+        "repo": "cargo-binutils",
+        "rev": "7abd59489ce1ff1ce724cb640f4b91b031a904d8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rust-embedded",
+        "repo": "cargo-binutils",
+        "type": "github"
+      }
+    },
     "crane": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -107,6 +123,7 @@
     },
     "root": {
       "inputs": {
+        "cargo-binutils-git": "cargo-binutils-git",
         "crane": "crane",
         "nixpkgs": "nixpkgs_2",
         "rust-overlay": "rust-overlay_2",
