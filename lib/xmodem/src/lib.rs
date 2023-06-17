@@ -306,7 +306,7 @@ impl<T: io::Read + io::Write> Xmodem<T> {
             } else {
                 self.write_byte(ACK)?;
                 (self.progress)(Progress::Packet(packet_num));
-                self.packet += 1;
+                self.packet = self.packet.wrapping_add(1);
                 Ok(128)
             }
         } else {
@@ -381,7 +381,7 @@ impl<T: io::Read + io::Write> Xmodem<T> {
 
         if response == ACK {
             (self.progress)(Progress::Packet(self.packet));
-            self.packet += 1;
+            self.packet = self.packet.wrapping_add(1);
             Ok(128)
         } else if response == NAK {
             ioerr!(Interrupted, "checksum verification failed")
