@@ -12,11 +12,12 @@ edition = "2018"
 
 [dependencies]
 cfg-if = "0.1"
-core_io = { version = "0.1.20190701", package = "core_io", optional = true }
+acid_io = { git = "https://github.com/dataphract/acid_io.git", rev = "2d54931" }
 
 [dev-dependencies]
 hashbrown = "0.6.3"
 
+# TODO: figure out how to supply std flag when no_std isn't provided
 [features]
-no_std = ["core_io"]
-alloc = ["core_io/alloc", "core_io/collections"]
+no_std = []
+alloc = ["acid_io/alloc"]

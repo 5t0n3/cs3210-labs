@@ -16,9 +16,9 @@ all: release
 debug:
 	@mkdir -p build
 	@echo "+ Building build/$(KERN).bin [build/debug]"
-	@cargo objcopy -- --strip-all -O elf64-aarch64 build/$(KERN).elf
+	@cargo objcopy $(CARGO_FLAGS) -- --strip-all -O elf64-aarch64 build/$(KERN).elf
 	@echo "+ Making kernel image (build/$(KERN).bin)"
-	@cargo objcopy -- --strip-all -O binary build/$(KERN).bin
+	@cargo objcopy $(CARGO_FLAGS) -- --strip-all -O binary build/$(KERN).bin
 
 release:
 	@mkdir -p build
