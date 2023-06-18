@@ -1,0 +1,5 @@
+A user could attempt to write to a read-only (input) pin or read from
+a write-only (output) pin which would not have the desired effects. By
+guaranteeing valid states at a type level (and not allowing users to
+forge them), both we and users can be sure that their operations will
+succeed and have the desired effects (barring other failures).

@@ -1,0 +1,2 @@
+In my blinky code, I utilized a start -> output transition, as well as
+both the set and clear self-transitions on the output pin.

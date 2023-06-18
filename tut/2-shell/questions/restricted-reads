@@ -1,0 +1,5 @@
+The CLO and CHI registers on the Registers struct are declared to be
+ReadVolatile pointers, meaning that no writing functions are
+exposed. Technically the inner() method combined with pointer casts
+could allow you to write to those registers, but at that point you've
+already violated any API guarantees.
