@@ -24,16 +24,41 @@ fn kmain() -> ! {
     // FIXME: Start the shell.
 
     // set GPIO pin 16 to output mode
+    let mut pin5 = Gpio::new(5).into_output();
+    let mut pin6 = Gpio::new(6).into_output();
+    let mut pin13 = Gpio::new(13).into_output();
     let mut pin16 = Gpio::new(16).into_output();
-    let sleep_period = Duration::from_millis(5000);
+    let mut pin19 = Gpio::new(19).into_output();
+    let mut pin26 = Gpio::new(26).into_output();
+    let half_second = Duration::from_millis(500);
 
     loop {
-        // set GPIO pin 16
+        // turn on zig zag in order
+        pin5.set();
+        spin_sleep(half_second);
+        pin6.set();
+        spin_sleep(half_second);
+        pin13.set();
+        spin_sleep(half_second);
         pin16.set();
-        spin_sleep(sleep_period);
+        spin_sleep(half_second);
+        pin19.set();
+        spin_sleep(half_second);
+        pin26.set();
+        spin_sleep(half_second);
 
-        // set GPIO pin 16 to off (clear it I guess?)
+        // do the same thing but turning off
+        pin5.clear();
+        spin_sleep(half_second);
+        pin6.clear();
+        spin_sleep(half_second);
+        pin13.clear();
+        spin_sleep(half_second);
         pin16.clear();
-        spin_sleep(sleep_period);
+        spin_sleep(half_second);
+        pin19.clear();
+        spin_sleep(half_second);
+        pin26.clear();
+        spin_sleep(half_second);
     }
 }

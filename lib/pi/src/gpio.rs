@@ -108,7 +108,7 @@ impl Gpio<Uninitialized> {
         let fsel_mask = (function as u32) << fsel_shift;
 
         // write function selection to proper register
-        self.registers.FSEL[fsel_num].write(fsel_mask);
+        self.registers.FSEL[fsel_num].or_mask(fsel_mask);
 
         // transition self into new state
         self.transition()
