@@ -3,19 +3,25 @@
 version = 3
 
 [[package]]
+name = "acid_io"
+version = "0.1.0"
+source = "git+https://github.com/dataphract/acid_io.git?rev=2d54931#2d549317fe9253df8b510ba6bbdcfe623a837286"
+dependencies = [
+ "libc",
+ "memchr",
+]
+
+[[package]]
 name = "cfg-if"
 version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
-name = "core2"
-version = "0.4.0"
+name = "libc"
+version = "0.2.146"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b49ba7ef1ad6107f8824dbe97de947cbaac53c44e7f9756a1fba0d37c1eec505"
-dependencies = [
- "memchr",
-]
+checksum = "f92be4933c13fd498862a9e02a3055f8a8d9c039ce33db97306fd5a6caa7f29b"
 
 [[package]]
 name = "memchr"
@@ -27,8 +33,8 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 name = "shim"
 version = "0.1.0"
 dependencies = [
+ "acid_io",
  "cfg-if",
- "core2",
 ]
 
 [[package]]
