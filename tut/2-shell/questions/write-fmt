@@ -1,0 +1,2 @@
+It is Console that has its write_fmt method called, which occurs because
+of the generic DerefMut trait impl on the MutexGuard type.

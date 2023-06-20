@@ -91,7 +91,7 @@
         cargoVendorDir = craneLib.vendorCargoDeps {cargoLock = "${libPath}/ttywrite/Cargo.lock";};
       };
 
-    inherit (pkgs) pwndbg clang clang-tools qemu socat python3;
+    inherit (pkgs) pwndbg clang clang-tools qemu socat python3 screen;
   in {
     # TODO: figure out what else to install
     devShells.${system}.default = pkgs.mkShell {
@@ -106,6 +106,7 @@
         qemu
         cargo-binutils
         python3
+        screen
 
         # lab0
         rustlings
@@ -116,7 +117,7 @@
 
         # lab2
         socat
-        ttywrite
+        # ttywrite
       ];
     };
 

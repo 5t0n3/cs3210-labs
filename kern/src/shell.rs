@@ -1,5 +1,8 @@
 use stack_vec::StackVec;
 
+#[cfg(test)]
+use core::prelude::rust_2021::*;
+
 use crate::console::{kprint, kprintln, CONSOLE};
 
 /// Error type for `Command` parse failures.
@@ -37,12 +40,75 @@ impl<'a> Command<'a> {
 
     /// Returns this command's path. This is equivalent to the first argument.
     fn path(&self) -> &str {
-        unimplemented!()
+        self.args[0]
+    }
+}
+
+fn execute_command(c: Command) {
+    match c.path() {
+        "echo" => {
+            for (n, arg) in c.args.iter().enumerate() {
+                // don't print the path/command
+                if n != 0 {
+                    kprint!("{} ", arg);
+                }
+            }
+            kprintln!();
+        }
+        unknown => {
+            kprintln!("unknown command: {}", unknown);
+        }
     }
 }
 
 /// Starts a shell using `prefix` as the prefix for each line. This function
 /// returns if the `exit` command is called.
 pub fn shell(prefix: &str) -> ! {
-    unimplemented!()
+    let mut console = CONSOLE.lock();
+    let mut current_line = [0; 512];
+    let mut line_vec = StackVec::new(&mut current_line);
+    loop {
+        kprint!("{}", prefix);
+        'command: loop {
+            match console.read_byte() {
+                // backspace or delete
+                8 | 127 => {
+                    if line_vec.len() > 0 {
+                        // backspace, overwrite with space & backspace again
+                        console.write_byte(8);
+                        console.write_byte(b' ');
+                        console.write_byte(8);
+                        line_vec.pop();
+                    }
+                }
+
+                // newline
+                b'\r' | b'\n' => {
+                    kprintln!();
+                    let mut args = [""; 64];
+
+                    match Command::parse(
+                        core::str::from_utf8(line_vec.as_slice()).unwrap(),
+                        &mut args,
+                    ) {
+                        Ok(command) => execute_command(command),
+                        Err(Error::TooManyArgs) => kprintln!("error: too many arguments"),
+                        _ => (),
+                    };
+                    line_vec.truncate(0);
+                    break 'command;
+                }
+
+                // other control characters (print bell character)
+                c if c.is_ascii_control() => kprint!("\u{7}"),
+
+                // normal characters
+                c => {
+                    if let Ok(()) = line_vec.push(c) {
+                        kprint!("{}", c as char);
+                    }
+                }
+            }
+        }
+    }
 }

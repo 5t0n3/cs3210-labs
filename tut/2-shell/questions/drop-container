@@ -1,0 +1,4 @@
+The reference count would never be decremented since the drop() method
+would never be run on a plain mutable reference. This could lead to
+unexpected results when attempting to mutably borrow an object in a case
+where it would seem to be exclusive.
