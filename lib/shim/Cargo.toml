@@ -12,7 +12,7 @@ edition = "2018"
 
 [dependencies]
 cfg-if = "0.1"
-acid_io = { git = "https://github.com/5t0n3/acid_io.git", rev = "ce508fe" }
+acid_io = { git = "https://github.com/5t0n3/acid_io.git", rev = "abeb816" }
 
 [dev-dependencies]
 hashbrown = "0.6.3"

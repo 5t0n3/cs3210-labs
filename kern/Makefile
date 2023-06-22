@@ -24,7 +24,7 @@ transmit: build
 	ttywrite -i build/$(KERN).bin $(TTY_PATH)
 
 objdump: build
-	cargo objdump -- --disassemble --no-show-raw-insn --print-imm-hex build/$(KERN).elf
+	cargo objdump -- --disassemble --no-show-raw-insn --print-imm-hex
 
 nm: build
 	cargo nm build/$(KERN).elf

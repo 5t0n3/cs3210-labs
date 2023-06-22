@@ -172,7 +172,7 @@ mod uart_io {
             let wait_res = self.wait_for_byte();
             if wait_res.is_err() {
                 // FIXME: TimedOut isn't available in acid_io :(
-                return ioerr!(Other, "UART timed out when waiting for first byte");
+                return ioerr!(TimedOut, "UART timed out when waiting for first byte");
             }
 
             // read the rest of the bytes that are immediately available
@@ -204,6 +204,16 @@ mod uart_io {
             // not sure if this is what they wanted? just waits until the transmit FIFO is completely empty
             while !self.registers.STAT_REG.has_mask(1 << 8) {}
             Ok(())
+        }
+    }
+
+    impl io::Write for &mut MiniUart {
+        fn write(&mut self, src: &[u8]) -> io::Result<usize> {
+            (*self).write(src)
+        }
+
+        fn flush(&mut self) -> io::Result<()> {
+            (*self).flush()
         }
     }
 }
