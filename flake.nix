@@ -99,6 +99,11 @@
       LLVM_LD_PATH = "${rust-nightly}/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld";
       HOST_TARGET = "x86_64-unknown-linux-gnu";
 
+      shellHook = ''
+        export CARGO_INSTALL_ROOT=$(pwd)/.cargo
+        export PATH=$PATH:$CARGO_INSTALL_ROOT/bin
+      '';
+
       packages = [
         # general stuff
         rust-nightly

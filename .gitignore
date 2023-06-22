@@ -6,3 +6,6 @@ TAGS
 # nix stuff
 .envrc
 .direnv/
+
+# local tool installations (mostly for ttywrite)
+/.cargo
