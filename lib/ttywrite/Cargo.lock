@@ -3,6 +3,15 @@
 version = 3
 
 [[package]]
+name = "acid_io"
+version = "0.1.0"
+source = "git+https://github.com/5t0n3/acid_io.git?rev=447c533#447c533909854098347c29f1855ea605657e1e99"
+dependencies = [
+ "libc",
+ "memchr",
+]
+
+[[package]]
 name = "ansi_term"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -47,15 +56,6 @@ dependencies = [
  "textwrap",
  "unicode-width",
  "vec_map",
-]
-
-[[package]]
-name = "core2"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b49ba7ef1ad6107f8824dbe97de947cbaac53c44e7f9756a1fba0d37c1eec505"
-dependencies = [
- "memchr",
 ]
 
 [[package]]
@@ -191,8 +191,8 @@ dependencies = [
 name = "shim"
 version = "0.1.0"
 dependencies = [
+ "acid_io",
  "cfg-if",
- "core2",
 ]
 
 [[package]]

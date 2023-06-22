@@ -3,6 +3,15 @@
 version = 3
 
 [[package]]
+name = "acid_io"
+version = "0.1.0"
+source = "git+https://github.com/5t0n3/acid_io.git?rev=ce508fe#ce508fef143e1ad7e09f1e97cf372f0226c83a6b"
+dependencies = [
+ "libc",
+ "memchr",
+]
+
+[[package]]
 name = "boot"
 version = "0.1.0"
 dependencies = [
@@ -18,13 +27,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
-name = "core_io"
-version = "0.1.20210325"
+name = "libc"
+version = "0.2.146"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97f8932064288cc79feb4d343a399d353a6f6f001e586ece47fe518a9e8507df"
-dependencies = [
- "rustc_version",
-]
+checksum = "f92be4933c13fd498862a9e02a3055f8a8d9c039ce33db97306fd5a6caa7f29b"
+
+[[package]]
+name = "memchr"
+version = "2.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "pi"
@@ -35,26 +47,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "rustc_version"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5f5376ea5e30ce23c03eb77cbe4962b988deead10910c372b226388b594c084"
-dependencies = [
- "semver",
-]
-
-[[package]]
-name = "semver"
-version = "0.1.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4f410fedcf71af0345d7607d246e7ad15faaadd49d240ee3b24e5dc21a820ac"
-
-[[package]]
 name = "shim"
 version = "0.1.0"
 dependencies = [
+ "acid_io",
  "cfg-if",
- "core_io",
 ]
 
 [[package]]

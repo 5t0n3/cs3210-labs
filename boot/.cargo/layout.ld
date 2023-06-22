@@ -1,5 +1,5 @@
 SECTIONS {
-  . = 0x4000000; /* bootloader start; leave ~64MiB free */
+  . = 0x80000; /* bootloader start; normal 32-bit kernel location */
 
   /* start of the binary */
   __text_beg = .;

@@ -117,7 +117,7 @@
 
         # lab2
         socat
-        # ttywrite
+        # ttywrite # errors on acid_io dependency for some reason??
       ];
     };
 

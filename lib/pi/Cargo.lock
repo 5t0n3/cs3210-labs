@@ -5,7 +5,7 @@ version = 3
 [[package]]
 name = "acid_io"
 version = "0.1.0"
-source = "git+https://github.com/dataphract/acid_io.git?rev=2d54931#2d549317fe9253df8b510ba6bbdcfe623a837286"
+source = "git+https://github.com/5t0n3/acid_io.git?rev=447c533#447c533909854098347c29f1855ea605657e1e99"
 dependencies = [
  "libc",
  "memchr",
