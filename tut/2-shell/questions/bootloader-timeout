@@ -1,0 +1,6 @@
+The transmitter might stall indefinitely if it starts a transmission after
+the bootloader sends the initial NAK byte over UART, since the receiver
+would be waiting for the first packet's metadata and the transmitter
+would be waiting for the initial NAK from the receiver. A timeout
+mitigates this by resending the first NAK byte every so often, ensuring
+it's seen by the transmitter until a successful transfer occurs.

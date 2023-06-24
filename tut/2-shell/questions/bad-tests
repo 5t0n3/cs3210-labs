@@ -1,0 +1,4 @@
+The XMODEM protocol requires structured communication between both
+parties, while sending data in the raw can be done effectively
+unidirectionally. It's much easier to set up sockets like test.sh does
+that act like sinks than hooking each of them up to the XMODEM protocol.

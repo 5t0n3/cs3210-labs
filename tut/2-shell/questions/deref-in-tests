@@ -1,0 +1,6 @@
+Any tests that attempt to read from a StackVec by directly indexing it
+would fail if the Deref implementation did not exist. A couple examples of
+such tests are index_oob, index_oob_after_truncate, and indexing. Anything
+that mutates elements at indices of a StackVec, on the other hand,
+would fail to compile with a missing DerefMut implementation. The only
+test that does this is mut_indexing.

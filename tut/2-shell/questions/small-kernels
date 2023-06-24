@@ -1,0 +1,4 @@
+The Linux 6.3.7 kernel image on my laptop comes out to only about 9.4
+megabytes, which would definitely fit in the 63.5 megabyte space we
+leave (although I ended up removing this issue entirely in my bootloader
+implementation).

@@ -11,12 +11,8 @@ pub mod console;
 pub mod mutex;
 pub mod shell;
 
-// FIXME: You need to add dependencies here to
-// test your drivers (Phase 2). Add them as needed.
-
 #[allow(dead_code)]
 fn kmain() -> ! {
-    // FIXME: Start the shell.
     loop {
         shell::shell("> ");
     }
