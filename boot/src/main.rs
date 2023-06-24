@@ -7,8 +7,9 @@ mod init;
 use core::arch::asm;
 use core::fmt::Write;
 use core::time::Duration;
-use core::write;
-use pi;
+use core::writeln;
+
+use pi::uart::MiniUart;
 use shim::io;
 use xmodem::Xmodem;
 
@@ -30,25 +31,32 @@ unsafe fn jump_to(addr: *mut u8) -> ! {
     )
 }
 
-unsafe fn kmain() -> ! {
-    // initialize mini UART on the pi
-    let mut uart = pi::uart::MiniUart::new();
+fn kmain() -> ! {
+    // initialize mini UART on the pi with a 750ms timeout
+    let mut uart = MiniUart::new();
     uart.set_read_timeout(Duration::from_millis(750));
 
     // create a slice in memory for the kernel to be placed into
-    let kernel_buf = core::slice::from_raw_parts_mut(BINARY_START, KERNEL_MAX_SIZE);
+    // this is safe because there is literally nothing else that could be using the
+    // memory at this point :)
+    let kernel_buf: &mut [u8] =
+        unsafe { core::slice::from_raw_parts_mut(BINARY_START, KERNEL_MAX_SIZE) };
 
     loop {
-        // attempt to read the kernel into memory as transmitted over UART
+        // attempt to read the kernel into memory as transmitted using XMODEM over UART
         match Xmodem::receive(&mut uart, &mut *kernel_buf) {
             // actually run the kernel code if it's read successfully
-            Ok(_) => jump_to(BINARY_START),
+            // this is technically always unsafe but we can't avoid it
+            Ok(_) => unsafe { jump_to(BINARY_START) },
 
             // silently attempt again on timeout
             Err(e) if e.kind() == io::ErrorKind::TimedOut => continue,
 
             // print an error message if something else went wrong
-            Err(e) => write!(uart, "error bootstrapping kernel: {}", e).unwrap(),
+            // TODO: figure out how to like view the error messages? screen locks ttys which is annoying
+            Err(e) => {
+                writeln!(&mut uart, "error bootstrapping kernel: {}", e).unwrap();
+            }
         }
     }
 }

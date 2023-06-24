@@ -169,20 +169,20 @@ mod uart_io {
     impl io::Read for MiniUart {
         fn read(&mut self, dst: &mut [u8]) -> io::Result<usize> {
             // wait for the first byte
-            let wait_res = self.wait_for_byte();
-            if wait_res.is_err() {
-                // FIXME: TimedOut isn't available in acid_io :(
-                return ioerr!(TimedOut, "UART timed out when waiting for first byte");
-            }
+            if let Err(_) = self.wait_for_byte() {
+                ioerr!(TimedOut, "UART timed out when waiting for first byte")
+            } else {
+                // read the rest of the bytes that are immediately available
+                let mut idx = 0;
+                while self.has_byte() && idx < dst.len() {
+                    dst[idx] = self.read_byte();
+                    idx += 1;
+                }
 
-            // read the rest of the bytes that are immediately available
-            let mut idx = 0;
-            while self.has_byte() && idx < dst.len() {
-                dst[idx] = self.read_byte();
-                idx += 1;
+                // idx does NOT have to be incremented since that already happens in the loop
+                // I totally didn't find this out the hard way when trying to get the xmodem bootloader working
+                Ok(idx)
             }
-
-            Ok(idx + 1)
         }
     }
 
@@ -209,11 +209,11 @@ mod uart_io {
 
     impl io::Write for &mut MiniUart {
         fn write(&mut self, src: &[u8]) -> io::Result<usize> {
-            (*self).write(src)
+            (**self).write(src)
         }
 
         fn flush(&mut self) -> io::Result<()> {
-            (*self).flush()
+            (**self).flush()
         }
     }
 }

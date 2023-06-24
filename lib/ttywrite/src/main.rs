@@ -118,8 +118,10 @@ fn main() {
 }
 
 fn progress_fn(progress: Progress) {
-    println!("Progress: {:?}", progress);
-    // match progress {
-    //     Progress::
-    // }
+    match progress {
+        Progress::Waiting => println!("Waiting for receiver NAK..."),
+        Progress::Started => println!("Transfer started!"),
+        Progress::Packet(n) => println!("Sending packet {}", n),
+        _ => {}
+    };
 }

@@ -12,8 +12,6 @@ pub enum Progress {
     Started,
     /// Packet `.0` was transmitted/received.
     Packet(u8),
-    NAK,
-    Unknown,
 }
 
 /// Type for progress callbacks.

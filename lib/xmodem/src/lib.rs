@@ -347,6 +347,7 @@ impl<T: io::Read + io::Write> Xmodem<T> {
     pub fn write_packet(&mut self, buf: &[u8]) -> io::Result<usize> {
         // invoke progress callback to indicate starting
         if !self.started {
+            (self.progress)(Progress::Waiting);
             self.expect_byte(NAK, "initial NAK for transfer")?;
             self.started = true;
             (self.progress)(Progress::Started);
