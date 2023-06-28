@@ -1,7 +1,9 @@
 ROOT := $(shell git rev-parse --show-toplevel)
 
 KERN := kernel
+SDCARD := $(ROOT)/ext/fat32-imgs/mock1.fat32.img
 TTY_PATH := /dev/ttyUSB0
+QEMU_ARGS ?=
 
 CARGO_FLAGS = -Z build-std=core,compiler_builtins,alloc -Z build-std-features=compiler-builtins-mem
 
@@ -17,11 +19,18 @@ build:
 	@cargo objcopy $(CARGO_FLAGS) --release -- --strip-all -O binary build/$(KERN).bin
 
 qemu: build
-	./qemu.sh build/$(KERN).bin
+	./qemu.sh build/$(KERN).bin -drive file=$(SDCARD),format=raw,if=sd $(QEMU_ARGS)
+
+qemu-gdb: build
+	./qemu.sh build/$(KERN).bin -drive file=$(SDCARD),format=raw,if=sd -s -S
+
+qemu-asm: build
+	./qemu.sh build/$(KERN).bin -drive file=$(SDCARD),format=raw,if=sd -d in_asm
 
 transmit: build
 	@echo "+ Transmitting build/$(KERN).bin to $(TTY_PATH)"
 	ttywrite -i build/$(KERN).bin $(TTY_PATH)
+	screen $(TTY_PATH) 115200
 
 objdump: build
 	cargo objdump -- --disassemble --no-show-raw-insn --print-imm-hex

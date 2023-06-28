@@ -1,6 +1,7 @@
 use core::fmt;
 use core::time::Duration;
 
+use shim::const_assert_size;
 use shim::io;
 
 use volatile::prelude::*;
@@ -48,6 +49,8 @@ struct Registers {
     STAT_REG: ReadVolatile<u32>,
     BAUD: Volatile<u32>,
 }
+
+const_assert_size!(Registers, 0x7E21506C - 0x7E215040);
 
 /// The Raspberry Pi's "mini UART".
 pub struct MiniUart {
