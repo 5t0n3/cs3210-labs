@@ -13,3 +13,4 @@ edition = "2018"
 [dependencies]
 volatile = { path = "../volatile" }
 shim = { path = "../shim", features = ["no_std"] }
+bilge = { version = "0.1.5", features = ["nightly"] }

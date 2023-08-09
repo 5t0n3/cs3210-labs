@@ -29,11 +29,15 @@
       overlays = [rust-overlay.overlays.default];
     };
 
-    rust-nightly = pkgs.rust-bin.selectLatestNightlyWith (toolchain:
-      toolchain.default.override {
+    # rust-nightly = pkgs.rust-bin.selectLatestNightlyWith (toolchain:
+    #   toolchain.default.override {
+    #     extensions = ["rust-src" "clippy" "llvm-tools-preview" "rust-analyzer"];
+    #     targets = ["aarch64-unknown-none"];
+    #   });
+    rust-nightly = pkgs.rust-bin.nightly."2022-11-03".default.override {
         extensions = ["rust-src" "clippy" "llvm-tools-preview" "rust-analyzer"];
         targets = ["aarch64-unknown-none"];
-      });
+    };
 
     craneLib = (crane.mkLib pkgs).overrideToolchain rust-nightly;
 
@@ -112,6 +116,7 @@
         cargo-binutils
         python3
         screen
+        pkgs.cargo-expand
 
         # lab0
         rustlings
